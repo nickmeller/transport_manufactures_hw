@@ -1,6 +1,4 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 class WFNExpception extends Exception {
@@ -24,7 +22,11 @@ class TransportHandler {
             if (!sc.hasNextInt()) {
                 throw new WFNExpception("Wrong file format");
             }
-            income = sc.nextInt();
+            try {
+                income = Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                throw new WFNExpception("Only one Integer per line expected");
+            }
         }
     }
     int mf_size = 64;
@@ -71,6 +73,17 @@ class TransportHandler {
             System.out.println(mf[i].income);
         }
     }
+    void save2hdd(String fileName) throws IOException {
+        BufferedWriter pw = new BufferedWriter(new FileWriter(fileName));
+        for (int i = 0; i < tail; i++) {
+            pw.write(mf[i].name + "\n");
+            for (int j = 0; j < mf[i].size; j++) {
+                pw.write(mf[i].city[j] + "\n");
+            }
+            pw.write(mf[i].income + "\n");
+        }
+        pw.close();
+    }
 }
 
 
@@ -79,9 +92,13 @@ public class Main {
         try {
             TransportHandler th = new TransportHandler(args[0]);
             th.print(100);
+
+            th.save2hdd("lol");
         } catch (WFNExpception wfnExpception) {
             wfnExpception.printStackTrace();
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
