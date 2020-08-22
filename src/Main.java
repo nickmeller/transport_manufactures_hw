@@ -158,8 +158,10 @@ public class Main {
                 th = new TransportHandler(pair[1]);
             } catch (WFNExpception wfnExpception) {
                 wfnExpception.printStackTrace();
+                return;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+                return;
             }
         }
         for (int i = 1; i < args.length; i++) {
